@@ -12,13 +12,23 @@ function setup() {
   // 建立全螢幕畫布
   createCanvas(windowWidth, windowHeight);
   
-  // 擷取攝影機影像
-  capture = createCapture(VIDEO);
+  // 指定開啟前置鏡頭 (facingMode: 'user')
+  let constraints = {
+    video: {
+      facingMode: 'user'
+    },
+    audio: false
+  };
+  
+  capture = createCapture(constraints, function(stream) {
+    console.log("攝影機串流已啟動");
+  });
+  
   // 隱藏預設產生的 HTML5 video 元件，我們只要在畫布上繪製
   capture.hide();
 
   // 初始化 FaceMesh 模型
-  facemesh = ml5.facemesh(capture, () => console.log("臉部偵測模型已準備就緒！"));
+  facemesh = ml5.facemesh(capture, modelReady);
   
   // 當偵測到臉部資料時，存入 predictions 變數
   facemesh.on('predict', results => {
@@ -34,6 +44,10 @@ function setup() {
       brightness: random(150, 255)
     });
   }
+}
+
+function modelReady() {
+  console.log("臉部偵測模型已準備就緒！");
 }
 
 function draw() {
