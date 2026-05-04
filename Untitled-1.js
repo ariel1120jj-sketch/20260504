@@ -40,13 +40,13 @@ function draw() {
   // 設定背景顏色為黑色（外太空）
   background(0);
   
-  // 計算影像顯示的大小（全螢幕的 50%）
-  let videoW = width * 0.5;
-  let videoH = height * 0.5;
+  // 設定影像為全螢幕大小
+  let videoW = width;
+  let videoH = height;
   
-  // 計算影像居中顯示的位置
-  let x = (width - videoW) / 2;
-  let y = (height - videoH) / 2;
+  // 影像佔滿全螢幕，起始座標設為 0
+  let x = 0;
+  let y = 0;
   
   push();
   // 實現左右顛倒（鏡像製作）
