@@ -22,6 +22,10 @@ function setup() {
   
   capture = createCapture(constraints, function(stream) {
     console.log("攝影機串流已啟動");
+    // 關鍵修補：確保在 iOS 上能自動播放
+    let videoElt = capture.elt;
+    videoElt.setAttribute('playsinline', '');
+    videoElt.setAttribute('autoplay', '');
   });
   
   // 隱藏預設產生的 HTML5 video 元件，我們只要在畫布上繪製
@@ -46,8 +50,10 @@ function setup() {
   }
 }
 
+let isModelReady = false;
 function modelReady() {
   console.log("臉部偵測模型已準備就緒！");
+  isModelReady = true;
 }
 
 function draw() {
@@ -62,6 +68,14 @@ function draw() {
   let x = 0;
   let y = 0;
   
+  // 檢查攝影機是否已就緒
+  if (capture.width === 0) {
+    fill(255);
+    textAlign(CENTER, CENTER);
+    text("正在啟動攝影機並加載模型...", width / 2, height / 2);
+    return; // 攝影機未就緒前先不執行後續繪圖
+  }
+
   push();
   // 實現左右顛倒（鏡像製作）
   // 1. 先將座標系移動到影像顯示區域的右側邊界
